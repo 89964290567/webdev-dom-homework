@@ -49,8 +49,14 @@
     fetch("https://webdev-hw-api.vercel.app/api/v1/raisa/comments", {
     method: "GET",
   }).then((response) => {
-    return response.json();
-  }).then((responseData) => {
+      console.log(response);
+      if (response.status ===200) {
+        return response.json();
+      } else {
+        //код который обработает ошибку
+        throw new Error("Сервер упал");
+      }
+    }).then((responseData) => {
       const appComments = responseData.comments.map((comment) => {
     return {
       name: comment.author.name.replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
@@ -182,15 +188,26 @@
         name: nameInputElement.value,
         text: commentInputElement.value,
         date: new Date(),
+        forceError: true,
       }),
     }).then((response) => {
-      console.log("время:" + (Date.now() - stsrtAt));
-      return response.json();
+      console.log(response);
+      if (response.status ===201) {
+        return response.json();
+      } else {
+        //код который обработает ошибку
+        throw new Error("Сервер упал");
+      }
     }).then(()=>{
       fetchAndRenderComments();
     }).then((data) => {
       buttonElement.disabled = false;
       buttonElement.textContent = 'Добавить';
+    }).catch((error)=> {
+      buttonElement.disabled = false;
+      buttonElement.textContent = 'Добавить';
+      alert("Кажется что-то пошло не так, поробуй позже");
+      console.warn(error);
     });
 
 
