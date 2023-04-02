@@ -201,7 +201,7 @@
           //код который обработает ошибку
         } else if (response.status === 400) {
           throw new Error("Слишком коротко");
-        } else {
+        } else if (response.status === 500){
           throw new Error("Сервер упал");
         }
       }).then((responseData) => {
@@ -212,7 +212,7 @@
         .then((data) => {
           buttonElement.disabled = false;
           buttonElement.textContent = 'Добавить';
-          nameElement.value = '';
+          //nameElement.value = '';
           commentsElement.value = '';
         })
         .catch((error) => {
@@ -220,13 +220,18 @@
           buttonElement.textContent = 'Добавить';
           if (error.message === 'Слишком коротко') {
             alert("name и text должены содержать хотя бы 3 символа");
-           
+            return;
 
           } if (error.message === 'Сервер упал') {
             alert("Сервер упал");
            
             console.warn(error);
+            return;
           }
+          if (error.message === 'Failed to fetch') {
+          alert('Нет интернета')
+          return;
+        }
         
         });
 
