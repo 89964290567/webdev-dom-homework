@@ -1,20 +1,21 @@
 import { fetchGet, fetchPost } from "./api.js"  // import пишем в начале кода а export в конец.
-
+import { getDate } from "./data.js"  // import пишем в начале кода а export в конец.
+import { renderComments } from "./render.js"  // import пишем в начале кода а export в конец.
 const listElement = document.getElementById('list');
 const commentInputElement = document.getElementById('comment-input');
 const nameInputElement = document.getElementById('name-input');
 const commentsElement = document.querySelectorAll(".comment");
 const buttonElement = document.getElementById('add-button');
 
-const options = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    timezone: 'UTC',
-    hour: '2-digit',
-    minute: '2-digit',
+//const options = {
+ //   year: '2-digit',
+ //   month: '2-digit',
+ //   day: '2-digit',
+ //   timezone: 'UTC',
+ //   hour: '2-digit',
+ //   minute: '2-digit',
 
-};
+//};
 let comments;
 
 fetchAndRenderComments();
@@ -27,46 +28,21 @@ function fetchAndRenderComments() {
             const appComments = responseData.comments.map((comment) => {
                 return {
                     name: comment.author.name.replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
-                    date: new Date(comment.date).toLocaleString("ru-RU", options).replace(",", ""),
+                    date: getDate(comment),
                     text: comment.text.replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
                     likesCount: comment.likes,
                     isLiked: false,
                 };
             });
             comments = appComments;
-            renderComments();
+            renderComments(comments, listElement);
         })
         .catch(() => {
             alert("Проверьте подключение к интернету");
         })
 }
 
-function renderComments() {
-    const commentsHtml = comments.map((user, index) => {
-        return `<li id="list" class="comment">
-          <div class="comment-header">
-            <div>${user.name}</div>
-            <div>${user.date}</div>
-          </div>
-          <div class="comment-body"> 
-             <div class="comment-text" data-index="${index}">
-                ${user.text}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <button data-index="${index}" class="delete-button">Удалить</button>
-            <div class="likes">
-              <span class="likes-counter">${user.likesCount}</span>
-              <button data-index="${index}"  class="${user.isLiked ? 'like-button -active-like' : 'like-button'}"></button>
-            </div> 
-          </div>
-        </li>`;
-    }).join("");
-
-    listElement.innerHTML = commentsHtml;
-
-    checkClick(); // Здесь вызывается функция (находиться на 123 строчке) которая отслеживает нажатия на все кнопки, каждый раз после рендера.
-};
+ //renderComments(comments);
 
 function addComments() {
     nameInputElement.classList.remove("error");
@@ -109,7 +85,7 @@ function addComments() {
             }
             return;
         });
-    renderComments();
+    renderComments(comments, listElement);
 }
 
 function checkClick() {
@@ -121,7 +97,7 @@ function checkClick() {
         comment.addEventListener("click", () => {
             const index = comment.dataset.index;
             commentInputElement.value = `>${comments[index].text} \n ${comments[index].name},`
-            renderComments();
+            renderComments(comments, listElement);
         });
     }
 
@@ -130,7 +106,7 @@ function checkClick() {
         deleteButton.addEventListener('click', () => {
             console.log(comments[index]);
             delete comments[index];
-            renderComments();
+            renderComments(comments, listElement);
         });
     };
 
@@ -148,7 +124,8 @@ function checkClick() {
                 comments[index].likesCount -= 1;
             }
 
-            renderComments();
+            renderComments(comments, listElement);
         })
     };
 }
+export { checkClick };
