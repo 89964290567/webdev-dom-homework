@@ -63,6 +63,9 @@ function click() {
                     addFormElement.classList.remove("-display-none");
                     registerElement.classList.add("-display-none");
                 })
+                .catch((error) =>{
+                    alert("Не верный логин или пароль");
+                })
             return;
                 break;
             case "registr":
@@ -95,6 +98,10 @@ function click() {
                     registerElement.classList.add("-display-none");
                     registerUser(registerElement,checkEnter);
                 })
+                .catch((error) => {
+                       alert("Такой пользователь уже существует")
+                        return console.log(error);
+                    })
             default:
                 break;
         }
