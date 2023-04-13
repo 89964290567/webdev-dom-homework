@@ -1,5 +1,5 @@
 
-function getDate(comment) {
+function getDate(date) {
     const options = {
         year: '2-digit',
         month: '2-digit',
@@ -9,6 +9,7 @@ function getDate(comment) {
         minute: '2-digit',
     
     };
-    return new Date(comment.date).toLocaleString("ru-RU", options).replace(",", "");
+    return new Date(date).toLocaleString("ru-RU", options).replace(",", "");
 }
+
 export { getDate }; // import пишем в начале кода а export в конец.
