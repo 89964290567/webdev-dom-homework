@@ -40,7 +40,7 @@ function fetchClick(login, password){
         return response.json();
     })  
 }
-function registerUserRe(login, password, name) {
+function registerUserRe(name, login, password) {
     return fetch("https://webdev-hw-api.vercel.app/api/user", {
         method: "POST",
         body: JSON.stringify({
