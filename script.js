@@ -1,6 +1,7 @@
 import { fetchGet, fetchPost, fetchClick, registerUserRe } from "./api.js"  // import пишем в начале кода а export в конец.
-import { getDate } from "./data.js"  // import пишем в начале кода а export в конец.
 import { registerUser } from "./render.js"
+import { format } from "date-fns";
+import _ from 'lodash';
 //import { renderComments } from "./render.js"  // import пишем в начале кода а export в конец.
 //import { renderLoginComponent } from "./components./login-comments.js";
 const listElement = document.getElementById("list");
@@ -14,7 +15,7 @@ const commentsElement = document.getElementById("comment-input");
 
 
 let checkEnter = "enter";
-
+//console.log(checkEnter);
 buttonElement.addEventListener("click", addComments);
 
 let comments;
@@ -90,7 +91,7 @@ function click() {
                 const loginEnterElement = document.getElementById('login');
                 const passwordEnterElement = document.getElementById('password');
                 console.log(nameElement, loginEnterElement, passwordEnterElement);
-                registerUserRe(nameElement.value, loginEnterElement.value, passwordEnterElement.value)
+                registerUserRe(_.capitalize(nameElement.value), loginEnterElement.value, passwordEnterElement.value)
                 .then((response) => {
                     console.log(response);
                     token = `Bearer ${response.user.token}`;
@@ -120,7 +121,7 @@ function renderComments() {
         return `<li id="list" class="comment">
       <div class="comment-header">
         <div>${user.author.name}</div>
-        <div>${getDate(user.date)}</div>
+        <div>${format(new Date(user.date), "yyyy-MM-dd hh.mm.ss")}</div>
       </div>
       <div class="comment-body"> 
          <div class="comment-text" data-index="${index}">
